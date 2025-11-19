@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>r..</title>
+    <title>r../</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
@@ -21,6 +21,7 @@
             align-items: center;
             color: #fff;
             overflow: hidden;
+            padding-bottom: 80px;
         }
         #particles-js {
             position: fixed;
@@ -73,7 +74,8 @@
             z-index: 1;
             opacity: 0;
             transition: opacity 0.8s ease;
-            padding-top: 60px;
+            padding-top: 0;
+            transform: translateY(-40px);
         }
         .container.visible {
             opacity: 1;
