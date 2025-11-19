@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -13,29 +14,81 @@
         }
         body {
             font-family: 'Consolas', monospace;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #0a0e27;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
+            overflow: hidden;
+        }
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: #0a0e27;
+            z-index: -1;
+        }
+        .loader-wrapper {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: #0a0e27;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .loader-wrapper.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(100, 149, 237, 0.2);
+            border-top: 4px solid #6495ed;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-text {
+            font-size: 18px;
+            color: #6495ed;
+            letter-spacing: 2px;
         }
         .container {
             text-align: center;
             position: relative;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .container.visible {
+            opacity: 1;
         }
         .avatar-wrapper {
             position: relative;
             display: inline-block;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .avatar {
             width: 160px;
             height: 160px;
             border-radius: 50%;
-            border: 4px solid rgba(255, 255, 255, 0.3);
+            border: 4px solid rgba(100, 149, 237, 0.3);
             object-fit: cover;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
         .emoji-pin {
             position: absolute;
@@ -49,27 +102,35 @@
             justify-content: center;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            min-height: 40px;
         }
         .name {
             font-size: 32px;
             font-weight: bold;
+            letter-spacing: 1px;
         }
         .status-emoji {
             width: 30px;
             height: 30px;
+            flex-shrink: 0;
+        }
+        .typing-wrapper {
+            margin-bottom: 40px;
+            min-height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .typing-text {
-            font-size: 20px;
+            font-size: 18px;
             opacity: 0.9;
-            margin-bottom: 40px;
             overflow: hidden;
             border-right: 3px solid rgba(255, 255, 255, 0.75);
             white-space: nowrap;
-            margin-left: auto;
-            margin-right: auto;
             display: inline-block;
-            animation: typing 3s steps(30, end), blink-caret 0.75s step-end infinite;
+            animation: typing 2.5s steps(25, end) 0.5s forwards, blink-caret 0.75s step-end infinite;
+            width: 0;
         }
         @keyframes typing {
             from { width: 0 }
@@ -79,22 +140,33 @@
             from, to { border-color: transparent }
             50% { border-color: rgba(255, 255, 255, 0.75) }
         }
+        .button-wrapper {
+            min-height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         .bubbly-button {
             font-family: 'Consolas', monospace;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            font-size: 18px;
-            padding: 15px 35px;
+            font-size: 16px;
+            padding: 14px 32px;
             appearance: none;
-            background-color: #ff0081;
+            background-color: #1e3a8a;
             color: #fff;
             border-radius: 8px;
             border: none;
             cursor: pointer;
             position: relative;
-            transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
-            box-shadow: 0 2px 25px rgba(255, 0, 130, 0.5);
+            transition: transform ease-in 0.1s, box-shadow ease-in 0.25s, background-color 0.2s;
+            box-shadow: 0 4px 20px rgba(30, 58, 138, 0.4);
+        }
+        .bubbly-button:hover {
+            background-color: #2563eb;
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5);
         }
         .bubbly-button:focus {
             outline: 0;
@@ -114,34 +186,34 @@
             display: none;
             top: -75%;
             background-image:  
-                radial-gradient(circle, #ff0081 20%, transparent 20%),
-                radial-gradient(circle, transparent 20%, #ff0081 20%, transparent 30%),
-                radial-gradient(circle, #ff0081 20%, transparent 20%), 
-                radial-gradient(circle, #ff0081 20%, transparent 20%),
-                radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%),
-                radial-gradient(circle, #ff0081 20%, transparent 20%),
-                radial-gradient(circle, #ff0081 20%, transparent 20%),
-                radial-gradient(circle, #ff0081 20%, transparent 20%),
-                radial-gradient(circle, #ff0081 20%, transparent 20%);
+                radial-gradient(circle, #2563eb 20%, transparent 20%),
+                radial-gradient(circle, transparent 20%, #2563eb 20%, transparent 30%),
+                radial-gradient(circle, #2563eb 20%, transparent 20%), 
+                radial-gradient(circle, #2563eb 20%, transparent 20%),
+                radial-gradient(circle, transparent 10%, #2563eb 15%, transparent 20%),
+                radial-gradient(circle, #2563eb 20%, transparent 20%),
+                radial-gradient(circle, #2563eb 20%, transparent 20%),
+                radial-gradient(circle, #2563eb 20%, transparent 20%),
+                radial-gradient(circle, #2563eb 20%, transparent 20%);
             background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
         }
         .bubbly-button:after {
             display: none;
             bottom: -75%;
             background-image:  
-                radial-gradient(circle, #ff0081 20%, transparent 20%), 
-                radial-gradient(circle, #ff0081 20%, transparent 20%),
-                radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%),
-                radial-gradient(circle, #ff0081 20%, transparent 20%),
-                radial-gradient(circle, #ff0081 20%, transparent 20%),
-                radial-gradient(circle, #ff0081 20%, transparent 20%),
-                radial-gradient(circle, #ff0081 20%, transparent 20%);
+                radial-gradient(circle, #2563eb 20%, transparent 20%), 
+                radial-gradient(circle, #2563eb 20%, transparent 20%),
+                radial-gradient(circle, transparent 10%, #2563eb 15%, transparent 20%),
+                radial-gradient(circle, #2563eb 20%, transparent 20%),
+                radial-gradient(circle, #2563eb 20%, transparent 20%),
+                radial-gradient(circle, #2563eb 20%, transparent 20%),
+                radial-gradient(circle, #2563eb 20%, transparent 20%);
             background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
         }
         .bubbly-button:active {
-            transform: scale(0.9);
-            background-color: #e6006f;
-            box-shadow: 0 2px 25px rgba(255, 0, 130, 0.2);
+            transform: scale(0.95);
+            background-color: #1e40af;
+            box-shadow: 0 2px 15px rgba(30, 64, 175, 0.3);
         }
         .bubbly-button.animate:before {
             display: block;
@@ -176,45 +248,138 @@
             }
         }
         .tg-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             fill: currentColor;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="loader-wrapper" id="loader">
+        <div class="loader"></div>
+        <div class="loader-text">Load...</div>
+    </div>
+    <div id="particles-js"></div>
+    <div class="container" id="content">
         <div class="avatar-wrapper">
-            <img src="https://t.me/i/userpic/160/codermasochist.jpg" alt="Avatar" class="avatar">
+            <img src="https://t.me/i/userpic/160/codermasochist.jpg" alt="Avatar" class="avatar" id="avatar">
             <div class="emoji-pin" id="emojiPin"></div>
         </div>
         <div class="name-wrapper">
             <div class="name">Assa</div>
             <div class="status-emoji" id="statusEmoji"></div>
         </div>
-        <div class="typing-text">goofy ahh & lazy Dev...</div>
-        <button class="bubbly-button" id="dmButton">
-            <svg class="tg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.53 3.67-.52.36-.99.53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.37-.49 1.03-.74 4.04-1.76 6.74-2.92 8.08-3.49 3.85-1.61 4.65-1.89 5.17-1.9.11 0 .37.03.54.17.14.11.18.26.2.37.01.06.03.22.01.34z"/>
-            </svg>
-            Dm...
-        </button>
+        <div class="typing-wrapper">
+            <div class="typing-text">goofy ahh & lazy Dev...</div>
+        </div>
+        <div class="button-wrapper">
+            <button class="bubbly-button" id="dmButton">
+                <svg class="tg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.53 3.67-.52.36-.99.53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.37-.49 1.03-.74 4.04-1.76 6.74-2.92 8.08-3.49 3.85-1.61 4.65-1.89 5.17-1.9.11 0 .37.03.54.17.14.11.18.26.2.37.01.06.03.22.01.34z"/>
+                </svg>
+                Dm...
+            </button>
+        </div>
     </div>
     <script>
-        lottie.loadAnimation({
+        let loadedCount = 0;
+        const totalAssets = 4;
+        function assetLoaded() {
+            loadedCount++;
+            if (loadedCount === totalAssets) {
+                setTimeout(() => {
+                    document.getElementById('loader').classList.add('hidden');
+                    document.getElementById('content').classList.add('visible');
+                }, 500);
+            }
+        }
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#6495ed'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#6495ed',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'grab'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                },
+                modes: {
+                    grab: {
+                        distance: 140,
+                        line_linked: {
+                            opacity: 1
+                        }
+                    },
+                    push: {
+                        particles_nb: 4
+                    }
+                }
+            },
+            retina_detect: true
+        });
+        assetLoaded();
+        const emojiPin = lottie.loadAnimation({
             container: document.getElementById('emojiPin'),
             renderer: 'svg',
             loop: true,
             autoplay: true,
             path: 'assets/emoji-ava.json'
         });
-        lottie.loadAnimation({
+        emojiPin.addEventListener('DOMLoaded', assetLoaded);
+        const statusEmoji = lottie.loadAnimation({
             container: document.getElementById('statusEmoji'),
             renderer: 'svg',
             loop: true,
             autoplay: true,
             path: 'assets/status-emoji.json'
         });
+        statusEmoji.addEventListener('DOMLoaded', assetLoaded);
+        const avatar = document.getElementById('avatar');
+        avatar.onload = assetLoaded;
+        avatar.onerror = assetLoaded;
         var animateButton = function(e) {
             e.preventDefault();
             e.target.classList.remove('animate');
@@ -231,4 +396,4 @@
         });
     </script>
 </body>
-                  </html>
+</html>
