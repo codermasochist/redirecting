@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
+    <title>r..</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
@@ -14,7 +14,7 @@
         }
         body {
             font-family: 'Consolas', monospace;
-            background-color: #0a0e27;
+            background-color: #000000;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -28,7 +28,7 @@
             height: 100%;
             top: 0;
             left: 0;
-            background-color: #0a0e27;
+            background-color: #000000;
             z-index: -1;
         }
         .loader-wrapper {
@@ -37,7 +37,7 @@
             height: 100%;
             top: 0;
             left: 0;
-            background-color: #0a0e27;
+            background-color: #000000;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -283,16 +283,19 @@
     </div>
     <script>
         let loadedCount = 0;
-        const totalAssets = 4;
+        const totalAssets = 2;
         function assetLoaded() {
             loadedCount++;
-            if (loadedCount === totalAssets) {
+            if (loadedCount >= totalAssets) {
                 setTimeout(() => {
                     document.getElementById('loader').classList.add('hidden');
                     document.getElementById('content').classList.add('visible');
-                }, 500);
+                }, 800);
             }
         }
+        setTimeout(() => {
+            assetLoaded();
+        }, 1500);
         particlesJS('particles-js', {
             particles: {
                 number: {
@@ -360,26 +363,36 @@
             },
             retina_detect: true
         });
-        assetLoaded();
-        const emojiPin = lottie.loadAnimation({
-            container: document.getElementById('emojiPin'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'assets/emoji-ava.json'
-        });
-        emojiPin.addEventListener('DOMLoaded', assetLoaded);
-        const statusEmoji = lottie.loadAnimation({
-            container: document.getElementById('statusEmoji'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'assets/status-emoji.json'
-        });
-        statusEmoji.addEventListener('DOMLoaded', assetLoaded);
+        setTimeout(() => {
+            try {
+                lottie.loadAnimation({
+                    container: document.getElementById('emojiPin'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: 'assets/emoji-ava.json'
+                });
+            } catch(e) {
+                console.log('Lottie 1 load error');
+            }
+            try {
+                lottie.loadAnimation({
+                    container: document.getElementById('statusEmoji'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: 'assets/status-emoji.json'
+                });
+            } catch(e) {
+                console.log('Lottie 2 load error');
+            }
+        }, 500);
         const avatar = document.getElementById('avatar');
-        avatar.onload = assetLoaded;
-        avatar.onerror = assetLoaded;
+        avatar.onload = () => assetLoaded();
+        avatar.onerror = () => assetLoaded();
+        if (avatar.complete) {
+            assetLoaded();
+        }
         var animateButton = function(e) {
             e.preventDefault();
             e.target.classList.remove('animate');
