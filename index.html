@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>r...</title>
+    <title>r..</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
@@ -73,6 +73,7 @@
             z-index: 1;
             opacity: 0;
             transition: opacity 0.8s ease;
+            padding-top: 60px;
         }
         .container.visible {
             opacity: 1;
@@ -81,6 +82,8 @@
             position: relative;
             display: inline-block;
             margin-bottom: 35px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .avatar {
             width: 130px;
@@ -89,6 +92,7 @@
             border: 3px solid rgba(100, 149, 237, 0.3);
             object-fit: cover;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            display: block;
         }
         .emoji-pin {
             position: absolute;
@@ -105,16 +109,19 @@
             gap: 12px;
             margin-bottom: 45px;
             min-height: 40px;
+            width: 100%;
         }
         .name {
             font-size: 28px;
             font-weight: bold;
             letter-spacing: 1px;
+            text-align: center;
         }
         .status-emoji {
             width: 26px;
             height: 26px;
             flex-shrink: 0;
+            margin-top: 2px;
         }
         .typing-wrapper {
             margin-bottom: 50px;
@@ -271,7 +278,7 @@
             <div class="status-emoji" id="statusEmoji"></div>
         </div>
         <div class="typing-wrapper">
-            <div class="typing-text">goofy ahh & lazy Dev...</div>
+            <div class="typing-text">Goofy ahh & lazy Dev...</div>
         </div>
         <div class="button-wrapper">
             <button class="bubbly-button" id="dmButton">
